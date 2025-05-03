@@ -1,0 +1,67 @@
+<div class="lg:w-3/12 mt-10 p-10 shadow-lg mx-auto">
+    <h3 class="text-3xl text-center font-semibold py-5">Regisztráció</h3>
+    <form [formGroup]="registerForm" class="flex flex-col">
+        <div class="flex flex-col mt-4 mb-1">
+            <input formControlName="firstName" class="p-2 border border-gray-300 rounded" type="text"
+                placeholder="Keresztnév">
+            <span *ngIf="registerForm.hasError('required','firstName') && registerForm.controls['firstName'].dirty"
+                class="text-red-500">Add meg a keresztneved!</span>
+        </div>
+        <div class="flex flex-col mt-4 mb-1">
+            <input formControlName="lastName" class="p-2 border border-gray-300 rounded" type="text"
+                placeholder="Vezetéknév">
+            <span *ngIf="registerForm.hasError('required','lastName') && registerForm.controls['lastName'].dirty"
+                class="text-red-500">Add meg a vezetékneved!</span>
+        </div>
+        <div class="flex flex-col mt-4 mb-1">
+            <input formControlName="email" class="p-2 border border-gray-300 rounded" type="text" placeholder="E-mail">
+            <span *ngIf="registerForm.hasError('required','email') && registerForm.controls['email'].dirty"
+                class="text-red-500">Add meg a cég E-mail címét!</span>
+            <span *ngIf="registerForm.hasError('email','email')" class="text-red-500">Érvénytelen E-mail cím!</span>
+        </div>
+        <div class="flex flex-col mt-4 mb-1">
+            <input formControlName="companyName" class="p-2 border border-gray-300 rounded" type="text"
+                placeholder="Cégnév">
+            <span *ngIf="registerForm.hasError('required','companyName') && registerForm.controls['companyName'].dirty"
+                class="text-red-500">Add meg a cég nevet!</span>
+        </div>
+        <div class="flex flex-col mt-4 mb-1">
+            <input formControlName="companyNumber" class="p-2 border border-gray-300 rounded" type="text"
+                placeholder="Cégjegyzékszám">
+            <span *ngIf="registerForm.hasError('required','companyNumber') && registerForm.controls['companyNumber'].dirty"
+                class="text-red-500">Add meg a cég cégjegyzékszámát!</span>
+        </div>
+        <div class="flex flex-col mt-4 mb-1">
+            <input formControlName="taxNumber" class="p-2 border border-gray-300 rounded" type="text"
+                placeholder="Adószám">
+            <span *ngIf="registerForm.hasError('required','taxNumber') && registerForm.controls['taxNumber'].dirty"
+                class="text-red-500">Add meg a cég adószámát!</span>
+        </div>
+        <div class="flex flex-col mt-4 mb-1">
+            <input formControlName="headquarters" class="p-2 border border-gray-300 rounded" type="text"
+                placeholder="Székhely">
+            <span *ngIf="registerForm.hasError('required','headquarters') && registerForm.controls['headquarters'].dirty"
+                class="text-red-500">Add meg a cég székhelyét!</span>
+        </div>
+        <div class="flex flex-col mt-4 mb-1">
+            <input formControlName="password" class="p-2 border border-gray-300 rounded" type="password"
+                placeholder="Jelszó">
+            <span *ngIf="registerForm.hasError('required','password') && registerForm.controls['password'].dirty"
+                class="text-red-500">Adj meg egy jelszót!</span>
+        </div>
+        <div class="flex flex-col mt-4 mb-1">
+            <input formControlName="confirmPassword" class="p-2 border border-gray-300 rounded" type="password"
+                placeholder="Jelszó megerősítése">
+            <span
+                *ngIf="registerForm.hasError('required','confirmPassword') && registerForm.controls['confirmPassword'].dirty"
+                class="text-red-500">Írd be újra a megadott jelszót!</span>
+            <span *ngIf="registerForm.hasError('confirmPasswordValidator')" class="text-red-500">A két jelszó nem egyezik!</span>
+        </div>
+        <button [disabled]="registerForm.invalid" [class.disabled]="registerForm.invalid" (click)="register()"
+            class="bg-indigo-500 p-2 rounded mt-3 text-white" routerLink="/login">Regisztrálok!</button>
+    </form>
+    <div class="flex justify-center mt-5">
+        <span>Van már fiókod?</span> <a routerLink="/login" class="text-indigo-600 ml-2 cursor-pointer">Bejelentkezés</a>
+    </div>
+</div>
+&nbsp;

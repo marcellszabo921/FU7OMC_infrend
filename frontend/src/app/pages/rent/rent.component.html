@@ -1,0 +1,41 @@
+<div style="background-image: url('https://images.unsplash.com/photo-1710162734135-8dc148f53abe?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');">
+  <div class="container mx-auto p-6">
+    <div *ngIf="!authService.isLoggedIn()" class="mb-8 p-6 bg-white rounded-xl shadow-md">
+      <h2 class="text-2xl font-bold mb-2">Üdvözöljük a gépbérlő oldalon!</h2>
+      <p class="text-gray-700">Kérjük, jelentkezzen be a gépek bérléséhez.</p>
+    </div>
+    <!-- Felhasználói adatok csak ha be van jelentkezve -->
+    <div *ngIf="authService.isLoggedIn() || user" class="mb-8 p-6 bg-white rounded-xl shadow-md">
+      <h2 class="text-2xl font-bold mb-2">Üdvözlünk, {{ user?.lastName }} {{ user?.firstName }}!</h2>
+      <p class="text-gray-700">Email: {{user?.email}} </p>
+      <p class="text-gray-700">Cégnév: {{user?.companyName}} </p>
+      <p class="text-gray-700">Cégjegyzékszám: {{user?.companyNumber}} </p>
+      <p class="text-gray-700">Adószám: {{user?.taxNumber}} </p>
+      <p class="text-gray-700">Székhely: {{user?.headquarters}} </p>
+      <p class="text-gray-700">Egyenleg: {{user?.balance}}</p>
+      <!-- Egyenleg feltöltése gomb -->
+      <button class="w bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition"
+        (click)="depositToBalance()">Egyenleg feltöltése</button>
+    </div>
+      <h1 class="text-4xl text-center font-semibold mb-2">Bérelhető gépek</h1>
+    <!-- Gépek listázása -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let machine of machines" class="bg-white rounded-xl shadow-md overflow-hidden">
+        <img
+          [src]="machine.imageUrl || 'https://www.mountaineers.org/images/placeholder-images/placeholder-400-x-300/@@images/image.jpeg'"
+          alt="Gép kép" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold mb-2">{{ machine.name }}</h3>
+          <p class="text-gray-700 mb-4">{{ machine.description }}</p>
+          <p class="text-gray-800 font-bold mb-4">{{ machine.dailyFee | currency:'HUF ' }}/nap</p>
+
+          <!-- Bérelés gomb csak ha be van jelentkezve -->
+          <button *ngIf="authService.isLoggedIn()" (click)="rentMachine(machine._id)"
+            class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition">
+            Bérelés
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
