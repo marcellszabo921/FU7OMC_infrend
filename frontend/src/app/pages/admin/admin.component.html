@@ -1,1 +1,64 @@
-<p>admin works!</p>
+<div *ngIf="users?.length" class="p-6 bg-white rounded-xl shadow-md">
+    <h2 class="text-xl font-semibold mb-4">Cégek kezelése</h2>
+    <div class="overflow-x-auto max-h-[500px]">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-100 sticky top-0">
+          <tr>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Cégnév</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Név</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Email</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Egyenleg</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Admin</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Művelet</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr *ngFor="let user of users" class="hover:bg-gray-50">
+            <td class="px-4 py-2">{{ user.companyName }}</td>
+            <td class="px-4 py-2">{{ user.firstName }} {{ user.lastName }}</td>
+            <td class="px-4 py-2">{{ user.email }}</td>
+            <td class="px-4 py-2">{{ user.balance | currency:'HUF ':'symbol':'1.0-0' }}</td>
+            <td class="px-4 py-2">
+              <span class="px-2 py-1 rounded text-sm font-medium"
+                [ngClass]="user.isAdmin ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
+                {{ user.isAdmin ? 'Igen' : 'Nem' }}
+              </span>
+            </td>
+            <td class="px-4 py-2 space-x-2">
+              <button (click)="openEditModal(user)" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">Szerkesztés</button>
+              <button (click)="deleteUser(user._id)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">Törlés</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  
+
+<!-- Szerkesztés popup -->
+<div *ngIf="showEditModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-10">
+  <div class="bg-white p-6 rounded shadow-lg w-96">
+    <h3 class="text-xl mb-4">Felhasználó szerkesztése</h3>
+
+    <form [formGroup]="editForm" (ngSubmit)="saveEdit()">
+      <input class="border w-full p-2 mb-2" formControlName="firstName" placeholder="Keresztnév">
+      <input class="border w-full p-2 mb-2" formControlName="lastName" placeholder="Vezetéknév">
+      <input class="border w-full p-2 mb-2" formControlName="email" placeholder="Email">
+      <input class="border w-full p-2 mb-2" formControlName="companyName" placeholder="Cégnév">
+      <input class="border w-full p-2 mb-2" formControlName="balance" placeholder="Egyenleg">
+      <input class="border w-full p-2 mb-2" formControlName="taxNumber" placeholder="Adószám">
+      <input class="border w-full p-2 mb-2" formControlName="companyNumber" placeholder="Cégjegyzékszám">
+      <input class="border w-full p-2 mb-2" formControlName="headquarters" placeholder="Székhely">
+      <label class="flex items-center space-x-2 mb-2">
+        <input type="checkbox" formControlName="isAdmin" />
+        <span>Admin jogosultság</span>
+      </label>
+
+      <div class="flex justify-end space-x-2 mt-4">
+        <button type="button" (click)="closeEditModal()" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Mégse</button>
+        <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-400">Mentés</button>
+      </div>
+    </form>
+  </div>
+</div>

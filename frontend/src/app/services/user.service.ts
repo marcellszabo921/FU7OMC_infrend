@@ -18,4 +18,16 @@ export class UserService {
       withCredentials: true
     });
   }
+
+  getAllUsers() {
+    return this.http.get<any>(`${apiUrls.userServiceApi}all`, { withCredentials: true });
+  }
+
+  updateUser(id: string, payload: any) {
+    return this.http.put<any>(`${apiUrls.userServiceApi}/${id}`, payload, { withCredentials: true });
+  }
+
+  deleteUser(id: string) {
+    return this.http.delete<any>(`${apiUrls.userServiceApi}/${id}`, { withCredentials: true });
+  }
 }

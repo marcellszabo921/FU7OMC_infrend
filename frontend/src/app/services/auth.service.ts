@@ -10,6 +10,23 @@ import { Router } from '@angular/router';
 export class AuthService {
   http = inject(HttpClient);
   router = inject(Router);
+  
+  private jwtHelper = new JwtHelperService();
+
+  getToken(): string | null {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    return localStorage.getItem('token');
+  }
+
+  isAdmin(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    const decoded = this.jwtHelper.decodeToken(token);
+    return decoded?.isAdmin === true;
+  }
 
   registerService(registerObj: any) {
     return this.http.post<any>(`${apiUrls.authServiceApi}register`, registerObj);
@@ -45,3 +62,4 @@ export class AuthService {
       });
   }  
 }
+
