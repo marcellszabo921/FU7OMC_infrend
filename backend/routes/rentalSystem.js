@@ -7,6 +7,8 @@ import {
     getPartnerTransactions,
     createRental,
     closeRental,
+    updateMachine,
+    deleteMachine
 } from '../controllers/rentalSystem.controller.js';
 import { verifyAdmin, verifyToken, verifyUser } from '../utils/verifyToken.js';
 
@@ -15,6 +17,8 @@ const router = express.Router();
 // === Gépek ===
 router.get('/machines', getMachines);
 router.post('/machines/create', verifyAdmin, addMachine);
+router.put('/:id', verifyAdmin, updateMachine);
+router.delete('/:id', verifyAdmin, deleteMachine);
 
 // === Partnerek ===
 router.post('/deposit', verifyToken ,depositToPartner);

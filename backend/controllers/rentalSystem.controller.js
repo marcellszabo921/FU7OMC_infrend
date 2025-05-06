@@ -15,7 +15,13 @@ export const getMachines = async (req, res) => {
 
 export const addMachine = async (req, res) => {
   try {
-    const newMachine = new Machine(req.body);
+    const { code, brand, name, type, performance, weight, dailyFee, deposit } = req.body;
+
+    if (!name || !dailyFee || !deposit) {
+      return res.status(400).json({ error: "Missing required fields: name, dailyFee, deposit" });
+    }
+
+    const newMachine = new Machine({ code, brand, name, type, performance, weight, dailyFee, deposit });
     await newMachine.save();
     res.status(201).json(newMachine);
   } catch (err) {
@@ -23,6 +29,25 @@ export const addMachine = async (req, res) => {
   }
 };
 
+export const updateMachine = async (req, res, next) => {
+  try {
+    const updated = await Machine.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updated) return next(CreateError(404, "Machine not found"));
+    return res.status(200).json({ success: true, data: updated });
+  } catch (err) {
+    return next(CreateError(500, err.message));
+  }
+};
+
+export const deleteMachine = async (req, res, next) => {
+  try {
+    const deleted = await Machine.findByIdAndDelete(req.params.id);
+    if (!deleted) return next(CreateError(404, "Machine not found"));
+    return res.status(200).json({ success: true, message: "Machine deleted" });
+  } catch (err) {
+    return next(CreateError(500, err.message));
+  }
+};
 // === Partnerek ===
 export const depositToPartner = async (req, res, next) => {
   try {

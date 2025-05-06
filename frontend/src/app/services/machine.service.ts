@@ -10,4 +10,16 @@ export class MachineService {
   getMachines(): Observable<any[]> {
     return this.http.get<any[]>(`${apiUrls.machineServiceApi}`);
   }
+
+  updateMachine(id: string, data: any) {
+    return this.http.put<any>(`${apiUrls.machineServiceApi}${id}`, data, { withCredentials: true });
+  }
+  
+  deleteMachine(id: string) {
+    return this.http.delete<any>(`${apiUrls.machineServiceApi}${id}`, { withCredentials: true });
+  }
+
+  createMachine(data: any) {
+    return this.http.post<any>(`${apiUrls.machineServiceApi}create`, data, { withCredentials: true });
+  }
 }

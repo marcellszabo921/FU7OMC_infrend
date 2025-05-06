@@ -25,7 +25,7 @@
               </span>
             </td>
             <td class="px-4 py-2 space-x-2">
-              <button (click)="openEditModal(user)" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">Szerkesztés</button>
+              <button (click)="openEditModalCompany(user)" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">Szerkesztés</button>
               <button (click)="deleteUser(user._id)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">Törlés</button>
             </td>
           </tr>
@@ -33,15 +33,13 @@
       </table>
     </div>
   </div>
-  
-  
 
 <!-- Szerkesztés popup -->
 <div *ngIf="showEditModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-10">
   <div class="bg-white p-6 rounded shadow-lg w-96">
     <h3 class="text-xl mb-4">Felhasználó szerkesztése</h3>
 
-    <form [formGroup]="editForm" (ngSubmit)="saveEdit()">
+    <form [formGroup]="editForm" (ngSubmit)="saveEditCompany()">
       <input class="border w-full p-2 mb-2" formControlName="firstName" placeholder="Keresztnév">
       <input class="border w-full p-2 mb-2" formControlName="lastName" placeholder="Vezetéknév">
       <input class="border w-full p-2 mb-2" formControlName="email" placeholder="Email">
@@ -56,7 +54,84 @@
       </label>
 
       <div class="flex justify-end space-x-2 mt-4">
-        <button type="button" (click)="closeEditModal()" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Mégse</button>
+        <button type="button" (click)="closeEditModalCompany()" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Mégse</button>
+        <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-400">Mentés</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Gépek kezelése -->
+<div *ngIf="machines?.length" class="p-6 bg-white rounded-xl shadow-md mt-10">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-semibold">Gépek kezelése</h2>
+    <button (click)="openMachineModal()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-500 transition">
+      Új gép hozzáadása
+    </button>
+  </div>
+
+  <div class="overflow-x-auto max-h-[500px]">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-100 sticky top-0">
+        <tr>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Név</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Típus</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Márka</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Kód</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Teljesítmény</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Súly</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Letét</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Napi díj</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Művelet</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <tr *ngFor="let machine of machines" class="hover:bg-gray-50">
+          <td class="px-4 py-2">{{ machine.name }}</td>
+          <td class="px-4 py-2">{{ machine.type }}</td>
+          <td class="px-4 py-2">{{ machine.brand }}</td>
+          <td class="px-4 py-2">{{ machine.code }}</td>
+          <td class="px-4 py-2">{{ machine.performance }} LE</td>
+          <td class="px-4 py-2">{{ machine.weight }} kg</td>
+          <td class="px-4 py-2">{{ machine.deposit | currency:'HUF' }}</td>
+          <td class="px-4 py-2">{{ machine.dailyFee | currency:'HUF' }}</td>
+          <td class="px-4 py-2 space-x-2">
+            <button (click)="openEditMachineModal(machine)" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">Szerkesztés</button>
+            <button (click)="deleteMachine(machine._id)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">Törlés</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Gép szerkesztése/hozzáadása modal -->
+<div *ngIf="showMachineModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-10">
+  <div class="bg-white p-6 rounded shadow-lg w-96">
+    <h3 class="text-xl mb-4">
+      {{ isEditMachine ? 'Gép szerkesztése' : 'Új gép hozzáadása' }}
+    </h3>
+
+    <form [formGroup]="machineForm" (ngSubmit)="saveMachine()">
+      <h1>Gép neve</h1>
+      <input class="border w-full p-2 mb-2" formControlName="name" placeholder="Gép neve">
+      <h1>Típus</h1>
+      <input class="border w-full p-2 mb-2" formControlName="type" placeholder="Típus">
+      <h1>Márka</h1>
+      <input class="border w-full p-2 mb-2" formControlName="brand" placeholder="Márka">
+      <h1>Kód (000000-999999)</h1>
+      <input class="border w-full p-2 mb-2" formControlName="code" placeholder="Kód">
+      <h1>Teljesítmény (W)</h1>
+      <input type="number" class="border w-full p-2 mb-2" formControlName="performance" placeholder="Teljesítmény (W)">
+      <h1>Súly (kg)</h1>
+      <input type="number" class="border w-full p-2 mb-2" formControlName="weight" placeholder="Súly (kg)">
+      <h1>Letét</h1>
+      <input type="number" class="border w-full p-2 mb-2" formControlName="deposit" placeholder="Letét (HUF)">
+      <h1>Napi díj</h1>
+      <input type="number" class="border w-full p-2 mb-2" formControlName="dailyFee" placeholder="Napi díj (HUF)">
+
+      <div class="flex justify-end space-x-2 mt-4">
+        <button type="button" (click)="closeMachineModal()" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Mégse</button>
         <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-400">Mentés</button>
       </div>
     </form>
