@@ -118,7 +118,7 @@ export const createRental = async (req, res) => {
     const machine = await Machine.findById(machineId);
     if (!machine) return res.status(404).json({ error: "Gép nem található" });
 
-    const rentalFee = machine.dailyFee;
+    const rentalFee = machine.deposit;
     user.balance -= rentalFee;
     await user.save();
 

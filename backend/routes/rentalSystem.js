@@ -10,15 +10,15 @@ import {
     updateMachine,
     deleteMachine
 } from '../controllers/rentalSystem.controller.js';
-import { verifyAdmin, verifyToken, verifyUser } from '../utils/verifyToken.js';
+import { verifyAdmin, verifyToken } from '../utils/verifyToken.js';
 
 const router = express.Router();
 
 // === Gépek ===
 router.get('/machines', getMachines);
 router.post('/machines/create', verifyAdmin, addMachine);
-router.put('/:id', verifyAdmin, updateMachine);
-router.delete('/:id', verifyAdmin, deleteMachine);
+router.put('/machines/:id', verifyAdmin, updateMachine);
+router.delete('/machines/:id', verifyAdmin, deleteMachine);
 
 // === Partnerek ===
 router.post('/deposit', verifyToken ,depositToPartner);
