@@ -73,10 +73,10 @@ export default class RentComponent implements OnInit {
     this.rentalService.createRental(rentalData).subscribe({
       next: res => {
         this.user = res.data;
-        console.log("Bérlés sikeres:", res);
+        alert("Bérlés sikeres!");
       },
       error: (err) => {
-        console.error("Hiba a bérlés során:", err);
+        alert("Hiba történt a bérlés során. Kérjük, ellenőrizze egyenlegét!");
       }
     });
   }

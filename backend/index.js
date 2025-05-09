@@ -5,6 +5,7 @@ import cors from 'cors';
 import roleRoute from './routes/role.js';
 import authRoute from './routes/auth.js';
 import userRoute from './routes/user.js';
+import postRoute from './routes/post.js';
 import cookieParser from 'cookie-parser';
 import rentalSystemRoute from './routes/rentalSystem.js';
 
@@ -22,6 +23,7 @@ app.use(cors({
 app.use("/api/role", roleRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
+app.use("/api/post", postRoute)
 app.use('/api/rentalSystem', rentalSystemRoute);
 
 //Error Handler

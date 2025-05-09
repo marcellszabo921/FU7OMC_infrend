@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
+import { PostService } from '../../services/post.service';
 import { CommonModule } from '@angular/common';
 import { MachineService } from '../../services/machine.service';
 
@@ -10,25 +11,35 @@ import { MachineService } from '../../services/machine.service';
   imports: [CommonModule, ReactiveFormsModule, FormsModule]
 })
 export default class AdminComponent implements OnInit {
+  //company
   users: any[] = [];
   selectedUser: any = null;
   editForm!: FormGroup;
   showEditModal = false;
+  //machines
   machines: any[] = [];
   selectedMachine: any = null;
   isEditMachine: boolean = false;
   machineForm!: FormGroup;
   showMachineModal: boolean = false;
+  //posts
+  posts: any[] = [];
+  showModal = false;
+  editMode = false;
+  selectedPost: any = null;
+  postForm!: FormGroup;
 
   constructor(
     @Inject(UserService) private userService: UserService,
     @Inject(MachineService) private machineService: MachineService,
+    private postService: PostService,
     private fb: FormBuilder
   ) { }
 
   ngOnInit() {
     this.loadUsers();
     this.loadMachines();
+    this.loadPosts();
   }
 
   loadUsers() {
@@ -90,6 +101,7 @@ export default class AdminComponent implements OnInit {
       code: [machine.code],
       performance: [machine.performance],
       weight: [machine.weight],
+      imageUrl: [machine.imageUrl],
       deposit: [machine.deposit],
       dailyFee: [machine.dailyFee],
     });
@@ -106,6 +118,7 @@ export default class AdminComponent implements OnInit {
       code: [''],
       performance: [0],
       weight: [0],
+      imageUrl: [''],
       deposit: [0],
       dailyFee: [0],
     });
@@ -168,5 +181,52 @@ updateMachine() {
       next: (res) => this.machines = res,
       error: (err) => console.error('Hiba gépek betöltésekor:', err)
     });
+  }
+
+  loadPosts() {
+    this.postService.getPosts().subscribe({
+      next: (res) => this.posts = res.data,
+      error: (err) => console.error('Hiba a posztok betöltésekor:', err)
+    });
+  }
+
+  openModal(post: any = null) {
+    this.editMode = !!post;
+    this.selectedPost = post;
+    this.showModal = true;
+    this.postForm = this.fb.group({
+      title: [post?.title],
+      content: [post?.content],
+      imageUrl: [post?.imageUrl || '']
+    });
+  }
+
+  savePost() {
+    if (this.postForm.invalid) return;
+
+    const data = this.postForm.value;
+    if (this.editMode && this.selectedPost) {
+      this.postService.updatePost(this.selectedPost._id, data).subscribe(() => {
+        this.loadPosts();
+        this.closeModal();
+      });
+    } else {
+      this.postService.createPost(data).subscribe(() => {
+        this.loadPosts();
+        this.closeModal();
+      });
+    }
+  }
+
+  deletePost(id: string) {
+    if (confirm('Biztosan törlöd a posztot?')) {
+      this.postService.deletePost(id).subscribe(() => this.loadPosts());
+    }
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.selectedPost = null;
+    this.postForm.reset();
   }
 }

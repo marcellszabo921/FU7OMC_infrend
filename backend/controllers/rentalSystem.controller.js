@@ -82,7 +82,7 @@ export const depositToPartner = async (req, res, next) => {
 
 // === Tranzakciók ===
 export const getPartnerTransactions = async (req, res) => {
-  const userId = req.user.id; // Token alapján kapjuk
+  const userId = req.user.id;
 
   const { from, to } = req.query;
 
@@ -186,7 +186,7 @@ export const closeRental = async (req, res) => {
     let penaltyTransaction = null;
 
     if (returnedInGoodCondition) {
-      rental.userId.balance += deposit; // visszatérítés
+      rental.userId.balance += deposit;
       refundTransaction = await Transaction.create({
         userId: rental.userId._id,
         type: "refund",
@@ -195,7 +195,7 @@ export const closeRental = async (req, res) => {
         date: end,
       });
     } else {
-      const penalty = deposit * 2; // pl. duplázott kaució büntetés
+      const penalty = deposit * 2;
       rental.userId.balance -= penalty;
       penaltyTransaction = await Transaction.create({
         userId: rental.userId._id,
