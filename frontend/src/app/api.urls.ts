@@ -1,5 +1,3 @@
-import { machine } from "node:os";
-
 export const apiUrls = {
     authServiceApi: 'http://localhost:5000/api/auth/',
     userServiceApi: 'http://localhost:5000/api/user/',
